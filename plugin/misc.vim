@@ -1,6 +1,6 @@
 " Easy search and replace.
-nnoremap <leader>g :set operatorfunc=<SID>LeaderFGrepOperator<cr>g@
-vnoremap <leader>g :<c-u>call <SID>LeaderFGrepOperator(visualmode())<cr>
+nnoremap <space>/ :set operatorfunc=<SID>LeaderFGrepOperator<cr>g@
+vnoremap <space>/ :<c-u>call <SID>LeaderFGrepOperator(visualmode())<cr>
 function! s:LeaderFGrepOperator(type)
     let saved_unnamed_register = @@
 

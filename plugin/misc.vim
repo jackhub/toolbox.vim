@@ -13,9 +13,10 @@ function! s:LeaderFGrepOperator(type)
     endif
 
     silent execute "Leaderf! rg --bottom " . shellescape(@@)
-    normal Q
+    silent execute "normal Q"
 
     let @/ = @@
     let @@ = saved_unnamed_register
 endfunction
 
+cab cf cfdo %s//

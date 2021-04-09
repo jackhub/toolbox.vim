@@ -65,6 +65,15 @@ fun s:setKeysAndAutocmds()
     autocmd BufWritePost .xcm call g:XCB_UpdateXCConfig()
 endf
 
+func s:isWorkSpace()
+    let wkEx = 'workspace'
+    if match(s:project, wkEx) > 0
+        return 1
+    else
+        return 0
+    endif
+endf
+
 fun g:XCB_GenerateBuildInfoIfNeeded()
     let s:project = s:findProjectFileName()
     let has_info_file = filereadable(getcwd()."/".s:xcodeproj_info_file)
@@ -81,9 +90,13 @@ fun g:XCB_GenerateBuildInfoIfNeeded()
     call g:XCB_UpdateXCConfig()
 
     " No target found need generate.
-    if !len(s:target)
+    if !len(s:scheme)
         echom s:project
-        let outputList = split(system("xcodebuild -list -project ".s:project), '\n')
+        if s:isWorkSpace()
+            let outputList = split(system("xcodebuild -list -workspace ".s:project), '\n')
+        else
+            let outputList = split(system("xcodebuild -list -project ".s:project), '\n')
+        endif
         let configTypeEx = '[^ :0-9"][a-zA-Z ]*:'
         let typeSettingEx = '[^ ]\(\w\|[-_]\)\+$'
 
@@ -104,8 +117,6 @@ fun g:XCB_GenerateBuildInfoIfNeeded()
         endfor
 
         " Default select first one, write configuration to file.
-        let s:buildConfigs[0] = '* '.s:buildConfigs[0]
-        let s:targets[0] = '* '.s:targets[0]
         let s:schemes[0] = '* '.s:schemes[0]
 
         let write_items = ['Destinations:', '"platform=iOS,name=jack’s iPhone"', '"platform=iOS Simulator,name=iPhone 12"', '',
@@ -172,7 +183,11 @@ fun s:XcodeCommandWithTarget(target)
         let cmd .= " -scheme " . s:scheme
     endif
     if (!empty(s:project))
-        let cmd .= " -project " . s:project
+        if s:isWorkSpace()
+            let cmd .= " -workspace " . s:project
+        else
+            let cmd .= " -project " . s:project
+        endif
     endif
     return cmd
 endf
@@ -203,6 +218,10 @@ endf
 
 fun s:findProjectFileName()
     let s:projectFile = globpath(expand('.'), '*.xcodeproj')
+    if (empty(s:projectFile))
+        let s:projectFile = globpath(expand('.'), '*.xcworkspace')
+    endif
+
     return s:projectFile
 endf
 

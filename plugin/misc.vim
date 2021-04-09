@@ -18,9 +18,9 @@ function! s:LeaderFGrepOperator(type)
     let @/ = @@
     let @@ = saved_unnamed_register
 endfunction
-
 cab cf cfdo %s//
 
+" ToggleTerminal
 let s:termBuf = 0
 function! g:JK_ToggleTerminal() 
     if !s:termBuf
@@ -39,5 +39,17 @@ function! g:JK_ToggleTerminal()
         execute "normal :q\<CR>\<c-w>p"
     else
         execute "normal \<c-w>b:22sp\<CR>:buf " . s:termBuf . " \<CR>i"
+    endif
+endfunction
+
+" ToggleWindowHeight
+let s:recordWinHeight = 0
+function! g:JK_ToggleMaxWindow()
+    let curWinHeight = winheight(0)
+    if curWinHeight > 80
+        execute "normal " .s:recordWinHeight ."\<c-w>_"
+    else
+        let s:recordWinHeight = curWinHeight
+        execute "normal \<c-w>_"
     endif
 endfunction

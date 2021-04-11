@@ -1,4 +1,5 @@
-" Easy search and replace.
+" Easy global search and replace.
+"=============================================================================
 nnoremap <space>/ :set operatorfunc=<SID>LeaderFGrepOperator<cr>g@
 vnoremap <space>/ :<c-u>call <SID>LeaderFGrepOperator(visualmode())<cr>
 function! s:LeaderFGrepOperator(type)
@@ -21,10 +22,11 @@ endfunction
 cab cf cfdo %s//
 
 " ToggleTerminal
+"=============================================================================
 let s:termBuf = 0
 function! g:JK_ToggleTerminal() 
     if !s:termBuf
-        execute "normal \<c-w>b:22sp term://zsh\<CR>i"
+        execute "normal \<c-w>b:22sp term://zsh\<CR>:set filetype=term\<CR>i"
         let bufName = bufname("%")
         let s:termBuf = bufnr(bufName)
         silent echom "New Term buffer, number: " . s:termBuf
@@ -43,13 +45,47 @@ function! g:JK_ToggleTerminal()
 endfunction
 
 " ToggleWindowHeight
+"=============================================================================
 let s:recordWinHeight = 0
 function! g:JK_ToggleMaxWindow()
     let curWinHeight = winheight(0)
-    if curWinHeight > 80
+    if curWinHeight > 50
         execute "normal " .s:recordWinHeight ."\<c-w>_"
     else
         let s:recordWinHeight = curWinHeight
         execute "normal \<c-w>_"
     endif
 endfunction
+
+" NeadTree mapping
+"=============================================================================
+function! s:CustomNeadTreeMapping()
+    if exists("g:loaded_nerdtree_custom_maps")
+        return
+    endif
+    let g:loaded_nerdtree_custom_maps = 1
+
+    call NERDTreeAddKeyMap({
+                \ 'scope': 'Node',
+                \ 'key': '<C-J>',
+                \ 'override': '1',
+                \ 'callback': 'NERDTreeCustomJumpDown',
+                \ 'quickhelpText': 'quick jump down' })
+
+    call NERDTreeAddKeyMap({
+                \ 'scope': 'Node',
+                \ 'key': '<C-K>',
+                \ 'override': '1',
+                \ 'callback': 'NERDTreeCustomJumpUp',
+                \ 'quickhelpText': 'quick jump up' })
+
+endfunction
+function! NERDTreeCustomJumpDown(fnode)
+    normal 9j
+endfunction
+function! NERDTreeCustomJumpUp(fnode)
+    normal 9k
+endfunction
+call s:CustomNeadTreeMapping()
+
+

@@ -27,20 +27,17 @@ let s:termBuf = 0
 function! g:JK_ToggleTerminal() 
     if !s:termBuf
         execute "normal \<c-w>b:22sp term://zsh\<CR>:set filetype=term\<CR>i"
-        let bufName = bufname("%")
-        let s:termBuf = bufnr(bufName)
-        silent echom "New Term buffer, number: " . s:termBuf
-        execute "normal :set nornu\<cr>"
-        execute "normal :set nonu\<cr>"
+        let s:termBuf = bufnr("%")
+        echom "Create a new term buffer, number: " . s:termBuf
+        execute "normal :set nornu\<cr>:set nonu\<cr>"
         return
     endif
     execute "normal \<c-w>b"
-    let bufName = bufname("%")
-    let termBuf = bufnr(bufName)
+    let termBuf = bufnr("%")
     if termBuf == s:termBuf
-        execute "normal :q\<CR>\<c-w>p"
+        execute "normal :q\<CR>\<C-W>p"
     else
-        execute "normal \<c-w>b:22sp\<CR>:buf " . s:termBuf . " \<CR>i"
+        execute "normal :22sp\<CR>:buf " . s:termBuf . " \<CR>i"
     endif
 endfunction
 

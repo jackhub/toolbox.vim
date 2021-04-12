@@ -14,12 +14,46 @@ function! s:LeaderFGrepOperator(type)
     endif
 
     silent execute "Leaderf! rg --bottom " . shellescape(@@)
-    silent execute "normal Q"
 
     let @/ = @@
     let @@ = saved_unnamed_register
 endfunction
 cab cf cfdo %s//
+
+" Quickfix up and down
+" default use leaderf quickfix, unless there is a vim buildin quickfix.
+"=============================================================================
+function g:JK_QuickfixDown()
+    let preBufwinnr = bufwinnr("%")
+    execute "normal \<c-w>b"
+    if preBufwinnr == bufwinnr("%")
+        Leaderf quickfix --next
+    else
+        let bufType = getbufvar("%", "&filetype")
+        execute "normal \<c-w>p"
+        if bufType == "qf"
+            cn
+        else
+            Leaderf quickfix --next
+        endif
+    endif
+endfunction
+
+function g:JK_QuickfixUp()
+    let preBufwinnr = bufwinnr("%")
+    execute "normal \<c-w>b"
+    if preBufwinnr == bufwinnr("%")
+        Leaderf quickfix --previous
+    else
+        let bufType = getbufvar("%", "&filetype")
+        execute "normal \<c-w>p"
+        if bufType == "qf"
+            cp
+        else
+            Leaderf quickfix --previous
+        endif
+    endif
+endfunction
 
 " ToggleTerminal
 "=============================================================================

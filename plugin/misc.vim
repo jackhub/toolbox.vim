@@ -13,6 +13,7 @@ function! s:LeaderFGrepOperator(type)
         return
     endif
 
+    normal m0
     silent execute "Leaderf! rg --bottom " . shellescape(@@)
 
     let @/ = @@
@@ -27,14 +28,14 @@ function g:JK_QuickfixDown()
     let preBufwinnr = bufwinnr("%")
     execute "normal \<c-w>b"
     if preBufwinnr == bufwinnr("%")
-        Leaderf quickfix --next
+        Leaderf --next
     else
         let bufType = getbufvar("%", "&filetype")
         execute "normal \<c-w>p"
         if bufType == "qf"
             cn
         else
-            Leaderf quickfix --next
+            Leaderf --next
         endif
     endif
 endfunction
@@ -43,14 +44,14 @@ function g:JK_QuickfixUp()
     let preBufwinnr = bufwinnr("%")
     execute "normal \<c-w>b"
     if preBufwinnr == bufwinnr("%")
-        Leaderf quickfix --previous
+        Leaderf --previous
     else
         let bufType = getbufvar("%", "&filetype")
         execute "normal \<c-w>p"
         if bufType == "qf"
             cp
         else
-            Leaderf quickfix --previous
+            Leaderf --previous
         endif
     endif
 endfunction

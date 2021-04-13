@@ -1,7 +1,22 @@
+" Script state variable define.
+"=============================================================================
+function! s:InitScriptStates()
+    if exists("g:loaded_toolbox_misc ")
+        return
+    endif
+    let g:loaded_toolbox_misc = 1
+
+    let s:termBuf = 0
+    let s:recordWinHeight = 0
+
+    nnoremap <space>/ :set operatorfunc=<SID>LeaderFGrepOperator<cr>g@
+    vnoremap <space>/ :<c-u>call <SID>LeaderFGrepOperator(visualmode())<cr>
+
+endfunction
+call s:InitScriptStates()
+
 " Easy global search and replace.
 "=============================================================================
-nnoremap <space>/ :set operatorfunc=<SID>LeaderFGrepOperator<cr>g@
-vnoremap <space>/ :<c-u>call <SID>LeaderFGrepOperator(visualmode())<cr>
 function! s:LeaderFGrepOperator(type)
     let saved_unnamed_register = @@
 
@@ -24,7 +39,7 @@ cab cf cfdo %s//
 " Quickfix up and down
 " default use leaderf quickfix, unless there is a vim buildin quickfix.
 "=============================================================================
-function g:JK_QuickfixDown()
+function! g:JK_QuickfixDown()
     let preBufwinnr = bufwinnr("%")
     execute "normal \<c-w>b"
     if preBufwinnr == bufwinnr("%")
@@ -40,7 +55,7 @@ function g:JK_QuickfixDown()
     endif
 endfunction
 
-function g:JK_QuickfixUp()
+function! g:JK_QuickfixUp()
     let preBufwinnr = bufwinnr("%")
     execute "normal \<c-w>b"
     if preBufwinnr == bufwinnr("%")
@@ -58,7 +73,6 @@ endfunction
 
 " ToggleTerminal
 "=============================================================================
-let s:termBuf = 0
 function! g:JK_ToggleTerminal() 
     if !s:termBuf
         execute "normal \<c-w>b:22sp term://zsh\<CR>:set filetype=term\<CR>i"
@@ -78,7 +92,6 @@ endfunction
 
 " ToggleWindowHeight
 "=============================================================================
-let s:recordWinHeight = 0
 function! g:JK_ToggleMaxWindow()
     let curWinHeight = winheight(0)
     if curWinHeight > 50
@@ -88,36 +101,5 @@ function! g:JK_ToggleMaxWindow()
         execute "normal \<c-w>_"
     endif
 endfunction
-
-" NeadTree mapping
-"=============================================================================
-function! s:CustomNeadTreeMapping()
-    if exists("g:loaded_nerdtree_custom_maps")
-        return
-    endif
-    let g:loaded_nerdtree_custom_maps = 1
-
-    call NERDTreeAddKeyMap({
-                \ 'scope': 'Node',
-                \ 'key': '<C-J>',
-                \ 'override': '1',
-                \ 'callback': 'NERDTreeCustomJumpDown',
-                \ 'quickhelpText': 'quick jump down' })
-
-    call NERDTreeAddKeyMap({
-                \ 'scope': 'Node',
-                \ 'key': '<C-K>',
-                \ 'override': '1',
-                \ 'callback': 'NERDTreeCustomJumpUp',
-                \ 'quickhelpText': 'quick jump up' })
-
-endfunction
-function! NERDTreeCustomJumpDown(fnode)
-    normal 9j
-endfunction
-function! NERDTreeCustomJumpUp(fnode)
-    normal 9k
-endfunction
-call s:CustomNeadTreeMapping()
 
 

@@ -49,9 +49,9 @@ endf
 
 fun s:setKeysAndAutocmds() 
     " Build current target
-    nn <m-b> :wa!<cr>:call g:XCB_Build()<cr> 
+    nn _b :wa!<cr>:call g:XCB_Build()<cr> 
     " Clean current target
-    nn <m-c> :call g:XCB_Clean()<cr> 
+    nn _K :call g:XCB_Clean()<cr> 
     " Open xcode with current project
     nn <space>x :wa!<cr>:call g:XCB_OpenXCode()<cr>
 

@@ -75,10 +75,10 @@ endfunction
 "=============================================================================
 function! g:JK_ToggleTerminal() 
     if !s:termBuf
-        execute "normal \<c-w>b:22sp term://zsh\<CR>:set filetype=term\<CR>i"
+        execute "normal \<c-w>b:sp term://zsh\<CR>:set filetype=term\<CR>i"
+        execute "normal :set nornu\<cr>:set nonu\<cr>"
         let s:termBuf = bufnr("%")
         echom "Create a new terminal buffer, number: " . s:termBuf
-        execute "normal :set nornu\<cr>:set nonu\<cr>"
         return
     endif
     execute "normal \<c-w>b"
@@ -87,9 +87,8 @@ function! g:JK_ToggleTerminal()
         execute "normal :q\<CR>\<C-W>p"
     else
         if bufexists(s:termBuf)
-            execute "normal :22sp\<CR>:buf " . s:termBuf . " \<CR>i"
+            execute "normal :sp\<CR>:buf " . s:termBuf . " \<CR>i"
         else
-            silent echom "Terminal buffer not exist, will create a new one."
             let s:termBuf = 0
             call g:JK_ToggleTerminal()
         endif
@@ -107,5 +106,8 @@ function! g:JK_ToggleMaxWindow()
         execute "normal \<c-w>_"
     endif
 endfunction
+
+" Trim whitespace-only line.
+command! JTrimWhiteLine execute "normal ma\<CR>:%s/^\\s\\+$//g\<CR>`a"
 
 

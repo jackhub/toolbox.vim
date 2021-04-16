@@ -75,8 +75,8 @@ endfunction
 "=============================================================================
 function! g:JK_ToggleTerminal() 
     if !s:termBuf
-        execute "normal \<c-w>b:sp term://zsh\<CR>:set filetype=term\<CR>i"
-        execute "normal :set nornu\<cr>:set nonu\<cr>"
+        silent execute "normal \<c-w>b:sp term://zsh\<CR>:set filetype=term\<CR>i"
+        silent execute "normal :set nornu\<cr>:set nonu\<cr>"
         let s:termBuf = bufnr("%")
         echom "Create a new terminal buffer, number: " . s:termBuf
         return
@@ -87,7 +87,7 @@ function! g:JK_ToggleTerminal()
         execute "normal :q\<CR>\<C-W>p"
     else
         if bufexists(s:termBuf)
-            execute "normal :sp\<CR>:buf " . s:termBuf . " \<CR>i"
+            silent execute "normal :sp\<CR>:buf " . s:termBuf . " \<CR>i"
         else
             let s:termBuf = 0
             call g:JK_ToggleTerminal()

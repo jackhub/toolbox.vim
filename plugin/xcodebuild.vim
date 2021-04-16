@@ -4,18 +4,18 @@
 " License: Vim license
 " Version .45
 
-let s:projects = []
 let s:project = '' 
-let s:targets = []
 let s:target = ''
-let s:buildConfigs = []
 let s:buildConfig = ''
-let s:schemes = []
 let s:scheme = ''
-let s:destinations = []
 let s:destination = ''
-let s:sdks = []
 let s:sdk = ''
+let s:projects = []
+let s:targets = []
+let s:buildConfigs = []
+let s:schemes = []
+let s:destinations = []
+let s:sdks = []
 let s:noProjectError = 'Missing .xcodeproj'
 let s:xcodeproj_info_file = '.xcm'
 
@@ -60,9 +60,9 @@ fun s:setKeysAndAutocmds()
     " Open config file.
     nn <leader>xo :sp .xcm<cr>
     " Generate compile_commands
-    nn <leader>xc :call g:XCB_GenerateCompileCommandsIfNeeded()<cr>:CocRestart<cr>
+    nn <leader>xc :call g:XCB_GenerateCompileCommands()<cr>:CocRestart<cr>
 
-    autocmd BufWritePost .xcm call g:XCB_UpdateXCConfig()
+    autocmd BufWritePost .xcm call g:XCB_GenerateBuildInfoIfNeeded() | checktime
 endf
 
 func s:isWorkSpace()
@@ -89,9 +89,15 @@ fun g:XCB_GenerateBuildInfoIfNeeded()
 
     call g:XCB_UpdateXCConfig()
 
-    " No target found need generate.
+    " No scheme found need generate.
     if !len(s:scheme)
-        echom s:project
+        " Clear cached info.
+        let s:targets = []
+        let s:buildConfigs = []
+        let s:schemes = []
+        let s:destinations = []
+        let s:sdks = []
+
         if s:isWorkSpace()
             let outputList = split(system("xcodebuild -list -workspace ".s:project), '\n')
         else
@@ -136,6 +142,13 @@ fun g:XCB_GenerateBuildInfoIfNeeded()
 endf
 
 fun g:XCB_UpdateXCConfig()
+    " Clear cached info.
+    let s:target = ''
+    let s:buildConfig = ''
+    let s:scheme = ''
+    let s:destination = ''
+    let s:sdk = ''
+
     let outputList = split(system("cat ".s:xcodeproj_info_file), '\n')
 
     let configTypeEx = '[a-zA-Z ]*:'
@@ -157,7 +170,7 @@ fun g:XCB_UpdateXCConfig()
                 elseif typeTitle == 'Destinations:'
                     let s:destination = typeSetting[2:]
                 elseif typeTitle == 'Build Configurations:'
-                    let s:buildConfig  = typeSetting[2:]
+                    let s:buildConfig = typeSetting[2:]
                 elseif typeTitle == 'Targets:'
                     let s:target = typeSetting[2:]
                 elseif typeTitle == 'Schemes:'
@@ -225,7 +238,7 @@ fun s:findProjectFileName()
     return s:projectFile
 endf
 
-fun g:XCB_GenerateCompileCommandsIfNeeded()
+fun g:XCB_GenerateCompileCommands()
     if !s:projectIsValid()	
         return
     endif

@@ -6,8 +6,11 @@ function! s:InitScriptStates()
     endif
     let g:loaded_toolbox_misc = 1
 
+    " Script level flags
     let s:termBuf = 0
     let s:recordWinHeight = 0
+    let s:profileStarted = 0
+    " End
 
     nnoremap <space>/ :set operatorfunc=<SID>LeaderFGrepOperator<cr>g@
     vnoremap <space>/ :<c-u>call <SID>LeaderFGrepOperator(visualmode())<cr>
@@ -108,6 +111,33 @@ function! g:JK_ToggleMaxWindow()
 endfunction
 
 " Trim whitespace-only line.
-command! JTrimWhiteLine execute "normal ma\<CR>:%s/^\\s\\+$//g\<CR>`a"
+"=============================================================================
+command! JKTrimWhiteLine execute "normal ma\<CR>:%s/^\\s\\+$//g\<CR>`a"
+
+" ToggleVerbose
+"=============================================================================
+function! g:JK_ToggleVerbose()
+    if !&verbose
+        set verbosefile=/tmp/vim_verbose.log
+        set verbose=15
+    else
+        set verbose=0
+        set verbosefile=
+    endif
+endfunction
+command! JKToggleVerbose call g:JK_ToggleVerbose()
+
+" ToggleProfile
+"=============================================================================
+function! g:JK_ToggleProfile()
+    if s:profileStarted
+        silent execute "normal :profile stop\<CR>"
+        let s:profileStarted = 0
+    else
+        silent execute "normal :profile start /tmp/vim-profile.log\<CR>:profile file *\<CR>:profile func *\<CR>"
+        let s:profileStarted = 1
+    endif
+endfunction
+command! JKToggleProfile call g:JK_ToggleProfile()
 
 

@@ -118,7 +118,8 @@ command! JKTrimWhiteLine execute "normal ma\<CR>:%s/^\\s\\+$//g\<CR>`a"
 "=============================================================================
 function! g:JK_ToggleVerbose()
     if !&verbose
-        set verbosefile=/tmp/vim_verbose.log
+        silent execute "normal :!echo > /tmp/vim-verbose.log\<CR>"
+        set verbosefile=/tmp/vim-verbose.log
         set verbose=15
     else
         set verbose=0
@@ -134,7 +135,7 @@ function! g:JK_ToggleProfile()
         silent execute "normal :profile stop\<CR>"
         let s:profileStarted = 0
     else
-        silent execute "normal :profile start /tmp/vim-profile.log\<CR>:profile file *\<CR>:profile func *\<CR>"
+        silent execute "normal :!echo > /tmp/vim-profile.log\<CR>:profile start /tmp/vim-profile.log\<CR>:profile file *\<CR>:profile func *\<CR>"
         let s:profileStarted = 1
     endif
 endfunction

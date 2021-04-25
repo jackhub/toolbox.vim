@@ -155,7 +155,8 @@ function MyTabLine()
             let s .= '%#TabLine#'
         endif
         let s .= '%' . (i + 1) . 'T'
-        let s .= '.   %{MyTabLabel(' . (i + 1) . ')}   .'
+        let s .= '   %{MyTabLabel(' . (i + 1) . ')}   '
+        let s .= "\ufc63 "
     endfor
     let s .= '%#TabLineFill#%T'
     return s

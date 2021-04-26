@@ -32,7 +32,7 @@ function! s:LeaderFGrepOperator(type)
     endif
 
     normal m0
-    silent execute "Leaderf! rg --bottom " . shellescape(@@)
+    silent execute "Leaderf! rg --nowrap --bottom " . shellescape(@@)
 
     let @/ = @@
     let @@ = saved_unnamed_register

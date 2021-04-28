@@ -12,8 +12,17 @@ function! s:InitScriptStates()
     let s:profileStarted = 0
     " End
 
+    " Vim maping and setting.
     nnoremap <space>/ :set operatorfunc=<SID>LeaderFGrepOperator<cr>g@
     vnoremap <space>/ :<c-u>call <SID>LeaderFGrepOperator(visualmode())<cr>
+    nnoremap g1 1gt
+    nnoremap g2 2gt
+    nnoremap g3 3gt
+    nnoremap g4 4gt
+    nnoremap g5 5gt
+    nnoremap g6 6gt
+    nnoremap g7 7gt
+    set tabline=%!MyTabLine()
 
 endfunction
 call s:InitScriptStates()
@@ -51,7 +60,7 @@ function! g:JK_QuickfixDown()
         let bufType = getbufvar("%", "&filetype")
         execute "normal \<c-w>p"
         if bufType == "qf"
-            cn
+            silent! cn
         else
             Leaderf --next
         endif
@@ -67,7 +76,7 @@ function! g:JK_QuickfixUp()
         let bufType = getbufvar("%", "&filetype")
         execute "normal \<c-w>p"
         if bufType == "qf"
-            cp
+            silent! cp
         else
             Leaderf --previous
         endif
@@ -144,7 +153,6 @@ command! JKToggleProfile call g:JK_ToggleProfile()
 
 " Tabline
 "=============================================================================
-set tabline=%!MyTabLine()
 " copy and modify from help tabpage.txt / setting-tabline.
 function MyTabLine()
     let s = ''
@@ -155,7 +163,7 @@ function MyTabLine()
             let s .= '%#TabLine#'
         endif
         let s .= '%' . (i + 1) . 'T'
-        let s .= '   %{MyTabLabel(' . (i + 1) . ')}   '
+        let s .= '   ' . (i + 1) .'_%{MyTabLabel(' . (i + 1) . ')}   '
         let s .= "\ufc63 "
     endfor
     let s .= '%#TabLineFill#%T'
@@ -168,3 +176,20 @@ function MyTabLabel(n)
 endfunction
 
 
+" Auto load session
+"=============================================================================
+function! s:LoadSessionFile()
+    let has_session = filereadable(getcwd()."/.session")
+    if has_session && argc() == 0
+        echom "Load session file"
+        so .session
+    endif
+endfunction
+
+
+" MISC autocmd
+"=============================================================================
+augroup JMISC
+    autocmd!
+    autocmd VimEnter * nested call <SID>LoadSessionFile()
+augroup END

@@ -179,13 +179,21 @@ endfunction
 " Auto load session
 "=============================================================================
 function! s:LoadSessionFile()
-    let has_session = filereadable(getcwd()."/.session")
+    let session_file = '~/.vim/session/' . substitute(getcwd(), '/', '\\%', 'g')
+    let has_session = filereadable(expand(session_file))
     if has_session && argc() == 0
-        echom "Load session file"
-        so .session
+        echom "Load session file: " . expand(session_file)
+        exe "so " . session_file
     endif
 endfunction
-
+function! g:JKSaveSessionFileIfNeeded()
+    if winnr('$') != 1 || tabpagenr('$') != 1
+        " Use \\% to prevent expand % when make session
+        let session_file = '~/.vim/session/' . substitute(getcwd(), '/', '\\%', 'g')
+        wa
+        exe "mksession! " . session_file
+    endif
+endfunction
 
 " MISC autocmd
 "=============================================================================

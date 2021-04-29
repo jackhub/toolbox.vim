@@ -194,12 +194,12 @@ function! g:JK_SaveSessionFileIfNeeded()
         exe "mksession! " . session_file
     endif
 endfunction
-command! JKLoadSession call g:JK_LoadSessionFile()
+command! JKLoadSession call JK_LoadSessionFile()
 
 
 " MISC autocmd
 "=============================================================================
 augroup JMISC
     autocmd!
-    autocmd VimEnter * nested call <SID>LoadSessionFile()
+    autocmd VimEnter * nested call JK_LoadSessionFile()
 augroup END

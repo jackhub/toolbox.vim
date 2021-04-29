@@ -178,7 +178,7 @@ endfunction
 
 " Auto load session
 "=============================================================================
-function! s:LoadSessionFile()
+function! g:JK_LoadSessionFile()
     let session_file = '~/.vim/session/' . substitute(getcwd(), '/', '\\%', 'g')
     let has_session = filereadable(expand(session_file))
     if has_session && argc() == 0
@@ -186,7 +186,7 @@ function! s:LoadSessionFile()
         exe "so " . session_file
     endif
 endfunction
-function! g:JKSaveSessionFileIfNeeded()
+function! g:JK_SaveSessionFileIfNeeded()
     if winnr('$') != 1 || tabpagenr('$') != 1
         " Use \\% to prevent expand % when make session
         let session_file = '~/.vim/session/' . substitute(getcwd(), '/', '\\%', 'g')
@@ -194,6 +194,8 @@ function! g:JKSaveSessionFileIfNeeded()
         exe "mksession! " . session_file
     endif
 endfunction
+command! JKLoadSession call g:JK_LoadSessionFile()
+
 
 " MISC autocmd
 "=============================================================================

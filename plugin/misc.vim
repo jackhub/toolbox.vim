@@ -186,8 +186,8 @@ function! g:JK_LoadSessionFile()
         exe "so " . session_file
     endif
 endfunction
-function! g:JK_SaveSessionFileIfNeeded()
-    if winnr('$') != 1 || tabpagenr('$') != 1
+function! g:JK_SaveSessionFileIfNeeded(force)
+    if winnr('$') != 1 || tabpagenr('$') != 1 || a:force
         " Use \\% to prevent expand % when make session
         let session_file = '~/.vim/session/' . substitute(getcwd(), '/', '\\%', 'g')
         wa

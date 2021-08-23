@@ -41,6 +41,7 @@ function! s:LeaderFGrepOperator(type)
     endif
 
     normal m0
+    " silent execute "lua require('telescope.builtin').grep_string({search=" . shellescape(@@) . "})"
     silent execute "Leaderf! rg --nowrap --bottom " . shellescape(@@)
 
     let @/ = @@

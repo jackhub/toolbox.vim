@@ -120,9 +120,12 @@ function! g:JK_ToggleMaxWindow()
     endif
 endfunction
 
-" Trim whitespace-only line.
+" Trim trailing bad whitespaces, it's bad for git diff, not perfect.
+" Xcode can auto trailing whitespace, vim cannot, because sometime we indeed
+" need a space at the end of a line.
 "=============================================================================
-command! JKTrimWhiteLine execute "normal ma\<CR>:%s/^\\s\\+$//g\<CR>`a"
+command! JKTrimWhiteSpace execute "normal mx:%s/\\s\\+$//ge\<CR>`x"
+command! JKShowWhiteSpace execute "normal mx:/\\s\\+$\<CR>`x"
 
 " ToggleVerbose
 "=============================================================================

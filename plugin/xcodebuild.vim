@@ -247,7 +247,12 @@ fun g:XCB_GenerateCompileCommands()
         exec "!" . s:XcodeCommandWithTarget(s:target) . ' clean'
         let build_cmd = s:XcodeCommandWithTarget(s:target) . ' build | xcpretty -r json-compilation-database --output compile_commands.json'
         call system(build_cmd)
-        call system('gsed -e "s/[^ ]*[gf]modules[^ ]*//g" -e "s/-index-store-path [^ ]*//g" -i compile_commands.json')
+        "
+        " clangd not support modules, disable it. It sames clangd 13 fix this
+        " problem, comment this right now.
+        " -e "s/[^ ]*[gf]modules[^ ]*//g"
+        "
+        call system('gsed -e "s/-index-store-path [^ ]*//g" -i compile_commands.json')
     " end
 endf
 

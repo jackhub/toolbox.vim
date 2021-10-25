@@ -207,3 +207,14 @@ augroup JMISC
     autocmd!
     autocmd VimEnter * nested call JK_LoadSessionFile()
 augroup END
+
+
+" Identify syntax highlight
+" https://vim.fandom.com/wiki/Identify_the_syntax_highlighting_group_used_at_the_cursor
+"=============================================================================
+command! JKHighlight echo {l,c,n ->
+        \   'hi<'    . synIDattr(synID(l, c, 1), n)             . '> '
+        \  .'trans<' . synIDattr(synID(l, c, 0), n)             . '> '
+        \  .'lo<'    . synIDattr(synIDtrans(synID(l, c, 1)), n) . '> '
+        \ }(line("."), col("."), "name")
+

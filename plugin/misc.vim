@@ -218,3 +218,34 @@ command! JKHighlight echo {l,c,n ->
         \  .'lo<'    . synIDattr(synIDtrans(synID(l, c, 1)), n) . '> '
         \ }(line("."), col("."), "name")
 
+
+" VSplit a right window if needed.
+"=============================================================================
+function! g:JK_VSplitWindowIfNeeded()
+    let oldw = winnr()
+    silent! exe "normal! \<c-w>l"
+    let neww = winnr()
+    if oldw == neww
+        vsp
+    endif
+endfunction
+command! JKVSplitWindowIfNeeded call JK_VSplitWindowIfNeeded()
+
+
+" Close all vSplit  right windows if needed.
+"=============================================================================
+function! g:JK_CloseVSplitWindowsIfNeeded()
+    let oldw = winnr()
+    while 1
+        silent! exe "normal! \<c-w>l"
+        let neww = winnr()
+        if oldw == neww
+            break
+        else
+            q
+        endif
+    endwhile
+endfunction
+command! JKCloseVSplitWindowsIfNeeded call JK_CloseVSplitWindowsIfNeeded()
+
+

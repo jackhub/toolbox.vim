@@ -249,3 +249,14 @@ endfunction
 command! JKCloseVSplitWindowsIfNeeded call JK_CloseVSplitWindowsIfNeeded()
 
 
+" Check is most right bottom windows.
+"=============================================================================
+function! g:JKIsMostRightBottomWindow()
+    let oldw = winnr()
+    silent! exe "normal! \<c-w>l"
+    silent! exe "normal! \<c-w>j"
+    let neww = winnr()
+    silent! exe oldw.'wincmd w'
+    return oldw == neww
+endfunction
+

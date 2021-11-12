@@ -51,6 +51,7 @@ cab cf cfdo %s//
 
 " Quickfix up and down
 " default use leaderf quickfix, unless there is a vim buildin quickfix.
+" Need quickfix or leaderf window exist.
 "=============================================================================
 function! g:JK_QuickfixDown()
     let preBufwinnr = bufwinnr("%")

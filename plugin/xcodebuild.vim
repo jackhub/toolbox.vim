@@ -58,9 +58,9 @@ fun s:setKeysAndAutocmds()
     " Show build command 
     nn <leader>xi :call g:XCB_BuildCommandInfo()<cr> 
     " Open config file.
-    nn <leader>xo :sp .xcm<cr>
+    nn <leader>xc :sp .xcm<cr>
     " Generate compile_commands
-    nn <leader>xc :call g:XCB_GenerateCompileCommands()<cr>:CocRestart<cr>
+    nn <leader>xg :call g:XCB_GenerateCompileCommands()<cr>:CocRestart<cr>
 
     autocmd BufWritePost .xcm call g:XCB_GenerateBuildInfoIfNeeded() | checktime
 endf

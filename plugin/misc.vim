@@ -15,13 +15,20 @@ function! s:InitScriptStates()
     " Vim maping and setting.
     nnoremap <space>/ :set operatorfunc=<SID>LeaderFGrepOperator<cr>g@
     vnoremap <space>/ :<c-u>call <SID>LeaderFGrepOperator(visualmode())<cr>
-    nnoremap g1 1gt
-    nnoremap g2 2gt
-    nnoremap g3 3gt
-    nnoremap g4 4gt
-    nnoremap g5 5gt
-    nnoremap g6 6gt
-    nnoremap g7 7gt
+    nnoremap `_1 1gt
+    nnoremap `_2 2gt
+    nnoremap `_3 3gt
+    nnoremap `_4 4gt
+    nnoremap `_5 5gt
+    nnoremap `_6 6gt
+    nnoremap `_7 7gt
+    inoremap `_1 <esc>1gt
+    inoremap `_2 <esc>2gt
+    inoremap `_3 <esc>3gt
+    inoremap `_4 <esc>4gt
+    inoremap `_5 <esc>5gt
+    inoremap `_6 <esc>6gt
+    inoremap `_7 <esc>7gt
     set tabline=%!MyTabLine()
 
 endfunction
@@ -168,7 +175,7 @@ function MyTabLine()
             let s .= '%#TabLine#'
         endif
         let s .= '%' . (i + 1) . 'T'
-        let s .= '   ' . (i + 1) .'_%{MyTabLabel(' . (i + 1) . ')}   '
+        let s .= '   ' . (i + 1) .' %{MyTabLabel(' . (i + 1) . ')}   '
         let s .= "\ufc63 "
     endfor
     let s .= '%#TabLineFill#%T'

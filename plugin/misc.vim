@@ -29,6 +29,13 @@ function! s:InitScriptStates()
     inoremap `_5 <esc>5gt
     inoremap `_6 <esc>6gt
     inoremap `_7 <esc>7gt
+    cnoremap `_1 <esc>1gt
+    cnoremap `_2 <esc>2gt
+    cnoremap `_3 <esc>3gt
+    cnoremap `_4 <esc>4gt
+    cnoremap `_5 <esc>5gt
+    cnoremap `_6 <esc>6gt
+    cnoremap `_7 <esc>7gt
     set tabline=%!MyTabLine()
 
 endfunction

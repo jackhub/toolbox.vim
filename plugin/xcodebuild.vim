@@ -243,8 +243,8 @@ fun g:XCB_GenerateCompileCommands()
         return
     endif
     " if !filereadable(getcwd()."/compile_commands.json")
-        " Clean first
-        " exec "!" . s:XcodeCommandWithTarget(s:target) . ' clean'
+        " Clean first, needed for objc/objcpp header files. Maybe try later.
+        exec "!" . s:XcodeCommandWithTarget(s:target) . ' clean'
         let build_cmd = s:XcodeCommandWithTarget(s:target) . ' build | xcpretty -r json-compilation-database --output compile_commands.json'
         call system(build_cmd)
         "

@@ -18,25 +18,18 @@ let s:destinations = []
 let s:sdks = []
 let s:noProjectError = 'Missing .xcodeproj'
 let s:xcodeproj_info_file = '.xcm'
+let s:isInit = 0
 
-fun g:XCB_Init()
-    call g:XCB_GenerateBuildInfoIfNeeded()
+" Open config file.
+nn <leader>xc :call g:XCB_OpenXCM()<cr>
+autocmd BufWritePost .xcm call g:XCB_Update() | checktime
 
-    if s:projectIsValid()	
-        set errorformat=
-                    \%f:%l:%c:{%*[^}]}:\ error:\ %m,
-                    \%f:%l:%c:{%*[^}]}:\ fatal\ error:\ %m,
-                    \%f:%l:%c:{%*[^}]}:\ warning:\ %m,
-                    \%f:%l:%c:\ error:\ %m,
-                    \%f:%l:%c:\ fatal\ error:\ %m,
-                    \%f:%l:%c:\ warning:\ %m,
-                    \%f:%l:\ Error:\ %m,
-                    \%f:%l:\ error:\ %m,
-                    \%f:%l:\ fatal\ error:\ %m,
-                    \%f:%l:\ warning:\ %m
+fun g:XCB_Update()
+    call g:XCB_GenerateOrUpdateBuildInfoIfNeeded()
 
-        call g:XCB_UpdateXCConfig()
-        call s:setKeysAndAutocmds()
+    if s:projectIsValid() && !s:isInit
+        let s:isInit = 1
+        call s:initSettings()
     endif
 endf
 
@@ -47,7 +40,19 @@ fun s:projectIsValid()
     return 0
 endf
 
-fun s:setKeysAndAutocmds() 
+func s:initSettings()
+    set errorformat=
+                \%f:%l:%c:{%*[^}]}:\ error:\ %m,
+                \%f:%l:%c:{%*[^}]}:\ fatal\ error:\ %m,
+                \%f:%l:%c:{%*[^}]}:\ warning:\ %m,
+                \%f:%l:%c:\ error:\ %m,
+                \%f:%l:%c:\ fatal\ error:\ %m,
+                \%f:%l:%c:\ warning:\ %m,
+                \%f:%l:\ Error:\ %m,
+                \%f:%l:\ error:\ %m,
+                \%f:%l:\ fatal\ error:\ %m,
+                \%f:%l:\ warning:\ %m
+
     " Build current target
     nn _b :wa!<cr>:call g:XCB_Build()<cr> 
     " Clean current target
@@ -57,12 +62,18 @@ fun s:setKeysAndAutocmds()
 
     " Show build command 
     nn <leader>xi :call g:XCB_BuildCommandInfo()<cr> 
-    " Open config file.
-    nn <leader>xc :sp .xcm<cr>
     " Generate compile_commands
     nn <leader>xg :call g:XCB_GenerateCompileCommands()<cr>:CocRestart<cr>
+endf
 
-    autocmd BufWritePost .xcm call g:XCB_GenerateBuildInfoIfNeeded() | checktime
+fun g:XCB_OpenXCM()
+    let flag = filereadable(getcwd()."/".".xcm")
+    if flag
+        sp .xcm
+    else
+        call writefile(["Projects:"], ".xcm")
+        sp .xcm
+    endif
 endf
 
 func s:isWorkSpace()
@@ -74,7 +85,7 @@ func s:isWorkSpace()
     endif
 endf
 
-fun g:XCB_GenerateBuildInfoIfNeeded()
+fun g:XCB_GenerateOrUpdateBuildInfoIfNeeded()
     let s:project = s:findProjectFileName()
     let has_info_file = filereadable(getcwd()."/".s:xcodeproj_info_file)
     " No xcoderoject found and no project setting.
@@ -242,17 +253,18 @@ fun g:XCB_GenerateCompileCommands()
     if !s:projectIsValid()	
         return
     endif
+
     " if !filereadable(getcwd()."/compile_commands.json")
-        " Clean first, needed for objc/objcpp header files. Maybe try later.
-        exec "!" . s:XcodeCommandWithTarget(s:target) . ' clean'
-        let build_cmd = s:XcodeCommandWithTarget(s:target) . ' build | xcpretty -r json-compilation-database --output compile_commands.json'
-        call system(build_cmd)
-        "
-        " clangd not support modules, disable it. It sames clangd 13 fix this
-        " problem, comment this right now.
-        " -e "s/[^ ]*[gf]modules[^ ]*//g"
-        "
-        call system('gsed -e "s/-index-store-path [^ ]*//g" -i compile_commands.json')
+    " Clean first, needed for objc/objcpp header files. Maybe try later.
+    exec "!" . s:XcodeCommandWithTarget(s:target) . ' clean'
+    let build_cmd = s:XcodeCommandWithTarget(s:target) . ' build | xcpretty -r json-compilation-database --output compile_commands.json'
+    call system(build_cmd)
+    "
+    " clangd not support modules, disable it. It sames clangd 13 fix this
+    " problem, comment this right now.
+    " -e "s/[^ ]*[gf]modules[^ ]*//g"
+    "
+    call system('gsed -e "s/-index-store-path [^ ]*//g" -i compile_commands.json')
     " end
 endf
 
@@ -264,4 +276,4 @@ fun g:XCB_OpenXCode()
     call system("open ". s:project)
 endf
 
-call g:XCB_Init()
+call g:XCB_Update()

@@ -119,7 +119,7 @@ function! g:JK_ToggleTerminal()
     execute "normal \<c-w>b"
     let termBuf = bufnr("%")
     if termBuf == s:termBuf
-        execute "normal :q\<CR>\<C-W>p"
+        execute "normal i"
     else
         if bufexists(s:termBuf)
             silent execute "normal :20sp\<CR>:buf " . s:termBuf . " \<CR>i"
@@ -220,7 +220,14 @@ function! g:JK_SaveSessionFileIfNeeded(force)
         exe "mksession! " . session_file
     endif
 endfunction
-command! JKLoadSession call JK_LoadSessionFile()
+function! g:JK_RemoveSessionFile()
+    let session_file = '~/.vim/session/' . substitute(getcwd(), '/', '\\%', 'g')
+    let has_session = filereadable(expand(session_file))
+    if has_session && argc() == 0
+        echom "Remove session file: " . expand(session_file)
+        exe "!rm " . session_file
+    endif
+endfunction
 
 
 " MISC autocmd

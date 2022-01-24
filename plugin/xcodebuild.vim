@@ -54,9 +54,9 @@ func s:initSettings()
                 \%f:%l:\ warning:\ %m
 
     " Build current target
-    nn _b :wa!<cr>:call g:XCB_Build()<cr> 
+    nn `_b :wa!<cr>:call g:XCB_Build()<cr> 
     " Clean current target
-    nn _K :call g:XCB_Clean()<cr> 
+    nn `_K :call g:XCB_Clean()<cr> 
     " Open xcode with current project
     nn <space>x :wa!<cr>:call g:XCB_OpenXCode()<cr>
 

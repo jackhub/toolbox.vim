@@ -11,6 +11,7 @@ let s:loaded = 1
 " Reference: nerdtree/nerdtree_plugin/fs_menu.vim
 function NewFileWithTemplate()
     let curDirNode = g:NERDTreeDirNode.GetSelected()
+    redraw! " Clear the menu
     let newNodeName = substitute(input('New File: ', curDirNode.path.str() . nerdtree#slash(), 'file'), '\(^\s*\|\s*$\)', '', 'g')
 
     if newNodeName ==# ''
@@ -24,7 +25,4 @@ function NewFileWithTemplate()
 
 endfunction
 
-call NERDTreeAddMenuItem({
-            \ 'text': '(n)ew with template',
-            \ 'shortcut': 'n',
-            \ 'callback': 'NewFileWithTemplate' })
+call NERDTreeAddMenuItem({'text': '(n)ew with template', 'shortcut': 'n', 'callback': 'NewFileWithTemplate'})

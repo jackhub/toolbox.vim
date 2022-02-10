@@ -211,6 +211,10 @@ function! g:JK_LoadSessionFile()
         echom "Load session file: " . expand(session_file)
         exe "so " . session_file
     endif
+    let has_vimspector_cfg = filereadable(getcwd()."/".".vimspector.json")
+    if has_vimspector_cfg
+        VimspectorLoadSession
+    endif
 endfunction
 function! g:JK_SaveSessionFileIfNeeded(force)
     if winnr('$') != 1 || tabpagenr('$') != 1 || a:force
@@ -218,6 +222,10 @@ function! g:JK_SaveSessionFileIfNeeded(force)
         let session_file = '~/.vim/session/' . substitute(getcwd(), '/', '\\%', 'g')
         wa
         exe "mksession! " . session_file
+    endif
+    let has_vimspector_cfg = filereadable(getcwd()."/".".vimspector.json")
+    if has_vimspector_cfg
+        VimspectorMkSession
     endif
 endfunction
 function! g:JK_RemoveSessionFile()

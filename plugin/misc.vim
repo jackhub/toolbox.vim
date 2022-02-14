@@ -211,8 +211,8 @@ function! g:JK_LoadSessionFile()
         echom "Load session file: " . expand(session_file)
         exe "so " . session_file
     endif
-    let has_vimspector_cfg = filereadable(getcwd()."/".".vimspector.json")
-    if has_vimspector_cfg
+    let has_vimspector_session = filereadable(getcwd()."/".".vimspector.session")
+    if has_vimspector_session
         VimspectorLoadSession
     endif
 endfunction

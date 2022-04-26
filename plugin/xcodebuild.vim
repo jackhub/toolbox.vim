@@ -274,6 +274,7 @@ endf
 
 fun g:XCB_OpenXCode()
     call system("open ". s:project)
+    call system("xed -l". line(".") . " " . expand('%:p'))
 endf
 
 call g:XCB_Update()
